@@ -1,5 +1,7 @@
 # Atlas Maker
 
+![screenshot of Atlas Maker](image.png)
+
 A Windows app that packs PNG images of one resolution into a single atlas, saved as lossy WebP at quality 90.
 
 ## Using it
@@ -32,3 +34,7 @@ The result, `build/atlas_maker.exe`, is a single file that needs only what ships
 - `src/gui`: the Win32 window.
 - `res`: the application manifest (themed controls, DPI awareness).
 - `tests`: layout unit tests and atlas tests against the fixtures in `tests/data`.
+
+## Acknowledgement
+
+The development of Atlas Maker was accelerated with Claude Opus 5.5

@@ -1,3 +1,5 @@
 #include <winuser.h>
+#include "resource.h"
 
 CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "app.manifest"
+IDI_APP ICON "../favicon.ico"

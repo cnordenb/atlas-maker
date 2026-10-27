@@ -27,7 +27,11 @@ target_compile_options(atlas_core PRIVATE ${WARNINGS})
 target_link_libraries(atlas_core PUBLIC webp windowscodecs ole32 uuid)
 
 add_executable(atlas_maker WIN32 src/gui/main.c src/gui/window.c src/gui/actions.c res/app.rc)
+target_include_directories(atlas_maker PRIVATE res)
 target_compile_options(atlas_maker PRIVATE ${WARNINGS})
+# Rebuild the resources when the icon or manifest changes; windres doesn't report those dependencies.
+set_source_files_properties(res/app.rc PROPERTIES OBJECT_DEPENDS
+  "${CMAKE_CURRENT_SOURCE_DIR}/favicon.ico;${CMAKE_CURRENT_SOURCE_DIR}/res/app.manifest")
 target_link_libraries(atlas_maker PRIVATE atlas_core comctl32 comdlg32)
 target_link_options(atlas_maker PRIVATE -municode -static)
 

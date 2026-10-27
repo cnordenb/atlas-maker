@@ -1,6 +1,7 @@
 #include <windows.h>
 
 #include "app.h"
+#include "resource.h"
 
 App app;
 
@@ -119,7 +120,7 @@ static int start(HINSTANCE instance, int show)
     wc.lpfnWndProc = window_proc;
     wc.hInstance = instance;
     wc.hCursor = LoadCursorW(NULL, IDC_ARROW);
-    wc.hIcon = LoadIconW(NULL, IDI_APPLICATION);
+    wc.hIcon = LoadIconW(instance, MAKEINTRESOURCEW(IDI_APP)); /* Windows derives the small icon from it */
     wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
     wc.lpszClassName = CLASS_NAME;
     if (app.font == NULL || !RegisterClassExW(&wc)) return -1;
