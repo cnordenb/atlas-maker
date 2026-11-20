@@ -1,3 +1,8 @@
+.vscode/
+temp/
+.claude/settings.local.json
+.metrics/
+target/
 learning-materials/
 build/
 images/*.png

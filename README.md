@@ -8,9 +8,11 @@
 
 ![screenshot of Atlas Maker](image.png)
 
+## Description
+
 A Windows app that packs PNG images of one resolution into a single atlas, saved as lossy WebP at quality 90.
 
-## Using it
+## Usage
 
 1. **Add PNGs...** (repeat to add more). The list shows the atlas order: alphabetical by file name, ignoring case,
    placed left to right and row by row. **Remove** and **Clear** edit the list.
@@ -22,25 +24,19 @@ A Windows app that packs PNG images of one resolution into a single atlas, saved
 The grid is the one whose atlas is closest to square (four 100 x 100 images make 200 x 200). Ties go to fewer
 empty cells, then to the wider grid. Empty cells are transparent. WebP limits an atlas to 16383 x 16383 px.
 
-## Building
+Atlas Maker is a single file, `atlas_maker.exe`, that needs only what ships with Windows 10 and 11. To build it from
+the source, see [MAINTAINER.md](documentation/MAINTAINER.md#building-and-running).
 
-Needs CMake 3.20+, MinGW-w64 GCC, and git. The first configure downloads libwebp v1.6.0.
+## Contributing
 
-```sh
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
-cmake --build build
-ctest --test-dir build
-```
+Anyone is welcome to open an [issue](https://github.com/cnordenb/atlas-maker/issues) to submit a bug report or suggest a new feature. Alternatively, you may fork or copy the repository and take it in any direction you wish.
 
-The result, `build/atlas_maker.exe`, is a single file that needs only what ships with Windows 10 and 11.
+If you wish to contribute work into this repository, please consult [CONTRIBUTING.md](.github/CONTRIBUTING.md) before any commits or pull requests.
 
-## Layout
+## Maintaining
 
-- `src/core`: grid layout, PNG decoding and resizing (Windows Imaging Component), WebP encoding, atlas assembly.
-- `src/gui`: the Win32 window.
-- `res`: the application manifest (themed controls, DPI awareness).
-- `tests`: layout unit tests and atlas tests against the fixtures in `tests/data`.
+To keep Atlas Maker working and up to date, see [MAINTAINER.md](documentation/MAINTAINER.md).
 
-## Acknowledgement
+## Acknowledgements
 
-The development of Atlas Maker was accelerated with Claude Opus 5.5
+Development of Atlas Maker was accelerated with Claude Opus 5.5 and Claude Fable 5.2.

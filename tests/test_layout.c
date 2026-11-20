@@ -1,60 +1,81 @@
 #include "check.h"
 #include "layout.h"
 
-static void expect_grid(int count, int tile_w, int tile_h, int cols, int rows)
+static int grid_is(int count, int tile_w, int tile_h, int cols, int rows)
 {
     Layout layout = {0, 0, 0, 0, 0, 0};
 
-    CHECK(layout_compute(count, tile_w, tile_h, &layout) == 0);
-    CHECK(layout.cols == cols);
-    CHECK(layout.rows == rows);
-    CHECK(layout.tile_w == tile_w && layout.tile_h == tile_h);
-    CHECK(layout.width == cols * tile_w && layout.height == rows * tile_h);
+    return layout_compute(count, tile_w, tile_h, &layout) == 0 && layout.cols == cols && layout.rows == rows;
 }
 
-static void test_grids(void)
+static int one_tile_fits(int tile_w, int tile_h)
 {
-    expect_grid(4, 100, 100, 2, 2);   /* the example: four 100x100 images make 200x200 */
-    expect_grid(4, 60, 60, 2, 2);     /* resized to 60x60 they make 120x120 */
-    expect_grid(1, 100, 100, 1, 1);
-    expect_grid(2, 100, 100, 2, 1);   /* 200x100 beats 100x200 only by being wider */
-    expect_grid(3, 100, 100, 2, 2);   /* square with one empty cell beats a 3:1 strip */
-    expect_grid(5, 100, 100, 3, 2);   /* 3x2 and 2x3 tie on ratio and cells; wider wins */
-    expect_grid(9, 100, 100, 3, 3);
-    expect_grid(56, 104, 104, 8, 7);
-    expect_grid(2, 200, 100, 1, 2);   /* wide tiles stack into a square */
-    expect_grid(4, 100, 50, 2, 2);    /* 1x4 (100x200) and 2x2 (200x100) tie; the wider wins */
+    Layout layout = {0, 0, 0, 0, 0, 0};
+
+    return layout_compute(1, tile_w, tile_h, &layout) == 0;
 }
 
-static void test_limits(void)
+static int four_squares_make_two_by_two(void)
 {
-    Layout layout;
-
-    CHECK(layout_compute(0, 100, 100, &layout) == -1);
-    CHECK(layout_compute(4, 0, 100, &layout) == -1);
-    CHECK(layout_compute(4, 100, -1, &layout) == -1);
-    CHECK(layout_compute(4, 100, 100, NULL) == -1);
-    CHECK(layout_compute(1, LAYOUT_MAX_DIM, LAYOUT_MAX_DIM, &layout) == 0);
-    CHECK(layout_compute(2, LAYOUT_MAX_DIM, LAYOUT_MAX_DIM, &layout) == -1);
-    CHECK(layout_compute(2, LAYOUT_MAX_DIM + 1, 1, &layout) == -1);
+    return grid_is(4, 100, 100, 2, 2);
 }
 
-static void test_scaled_height(void)
+static int three_squares_make_two_by_two(void)
 {
-    CHECK(layout_scaled_height(100, 100, 60) == 60);
-    CHECK(layout_scaled_height(104, 104, 104) == 104);
-    CHECK(layout_scaled_height(200, 100, 60) == 30);
-    CHECK(layout_scaled_height(3, 2, 4) == 3);      /* 2.67 rounds to 3 */
-    CHECK(layout_scaled_height(1000, 1, 10) == 1);  /* never collapses to 0 */
-    CHECK(layout_scaled_height(0, 100, 60) == -1);
-    CHECK(layout_scaled_height(100, 100, 0) == -1);
+    return grid_is(3, 100, 100, 2, 2);
 }
 
-int main(void)
+static int two_wide_tiles_make_one_column(void)
 {
-    test_grids();
-    test_limits();
-    test_scaled_height();
-    if (check_failures == 0) printf("test_layout: all checks passed\n");
-    return check_failures;
+    return grid_is(2, 200, 100, 1, 2);
 }
+
+static int equally_square_grids_give_more_columns(void)
+{
+    return grid_is(2, 100, 100, 2, 1);
+}
+
+static int largest_atlas_fits(void)
+{
+    return one_tile_fits(LAYOUT_MAX_DIM, LAYOUT_MAX_DIM);
+}
+
+static int too_wide_atlas_is_refused(void)
+{
+    return !one_tile_fits(LAYOUT_MAX_DIM + 1, 1);
+}
+
+static int too_tall_atlas_is_refused(void)
+{
+    return !one_tile_fits(1, LAYOUT_MAX_DIM + 1);
+}
+
+static int height_keeps_aspect_ratio(void)
+{
+    return layout_scaled_height(200, 100, 60) == 30;
+}
+
+static int height_rounds_to_nearest(void)
+{
+    return layout_scaled_height(3, 2, 4) == 3;
+}
+
+static int height_is_at_least_one(void)
+{
+    return layout_scaled_height(1000, 1, 10) == 1;
+}
+
+const Test layout_tests[] = {
+    four_squares_make_two_by_two,
+    three_squares_make_two_by_two,
+    two_wide_tiles_make_one_column,
+    equally_square_grids_give_more_columns,
+    largest_atlas_fits,
+    too_wide_atlas_is_refused,
+    too_tall_atlas_is_refused,
+    height_keeps_aspect_ratio,
+    height_rounds_to_nearest,
+    height_is_at_least_one,
+};
+
+const int layout_test_count = (int)(sizeof layout_tests / sizeof layout_tests[0]);

@@ -1,17 +1,21 @@
 #ifndef CHECK_H
 #define CHECK_H
 
-#include <stdio.h>
+#include <wchar.h>
 
-/* Counts failed checks; a test program returns it from main so CTest sees the failure. */
-static int check_failures;
+typedef int (*Test)(void);
 
-#define CHECK(cond)                                                                 \
-    do {                                                                            \
-        if (!(cond)) {                                                              \
-            fprintf(stderr, "%s:%d: CHECK failed: %s\n", __FILE__, __LINE__, #cond); \
-            check_failures++;                                                       \
-        }                                                                           \
-    } while (0)
+extern const Test layout_tests[];
+extern const int layout_test_count;
+
+extern const Test atlas_tests[];
+extern const int atlas_test_count;
+
+extern const Test rules_tests[];
+extern const int rules_test_count;
+
+int atlas_tests_start(const wchar_t *project_dir);
+void atlas_tests_stop(void);
+void rules_tests_start(const wchar_t *project_dir);
 
 #endif

@@ -8,7 +8,6 @@
 
 #include "image.h"
 
-/* WICBitmapInterpolationModeHighQualityCubic (Windows 10 and later) is missing from MinGW's wincodec.h. */
 #define INTERPOLATION_HIGH_QUALITY_CUBIC ((WICBitmapInterpolationMode)4)
 
 static IWICImagingFactory *factory;
@@ -65,7 +64,6 @@ int image_probe(const wchar_t *path, int *width, int *height)
     return SUCCEEDED(hr) ? IMAGE_OK : IMAGE_ERR_READ;
 }
 
-/* On success, releases *src and replaces it with next. On failure, leaves *src alone. */
 static HRESULT advance(IWICBitmapSource **src, HRESULT hr, IWICBitmapSource *next)
 {
     if (SUCCEEDED(hr)) {
@@ -131,7 +129,6 @@ int image_load(const wchar_t *path, int width, int height, Image *out)
     src = (IWICBitmapSource *)frame;
     hr = frame_size(frame, &src_w, &src_h);
     if (SUCCEEDED(hr) && (src_w != width || src_h != height)) {
-        /* Scale premultiplied pixels so colors hidden under transparent pixels don't bleed into the edges. */
         hr = convert(&src, &GUID_WICPixelFormat32bppPBGRA);
         if (SUCCEEDED(hr)) hr = scale(&src, width, height);
     }
@@ -156,7 +153,7 @@ static int write_file(const wchar_t *path, const void *data, size_t size)
     if (file == INVALID_HANDLE_VALUE) return IMAGE_ERR_WRITE;
     ok = size <= MAXDWORD && WriteFile(file, data, (DWORD)size, &written, NULL) && written == size;
     if (!CloseHandle(file)) ok = FALSE;
-    if (!ok) DeleteFileW(path); /* don't leave a truncated file behind */
+    if (!ok) DeleteFileW(path);
     return ok ? IMAGE_OK : IMAGE_ERR_WRITE;
 }
 

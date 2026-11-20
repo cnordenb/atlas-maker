@@ -22,7 +22,6 @@ static int compare_paths(const void *a, const void *b)
     const wchar_t *path_b = *(const wchar_t *const *)b;
     int order = CompareStringOrdinal(atlas_file_name(path_a), -1, atlas_file_name(path_b), -1, TRUE);
 
-    /* Same name in two folders: fall back to the whole path so the order is still fixed. */
     if (order == CSTR_EQUAL) order = CompareStringOrdinal(path_a, -1, path_b, -1, TRUE);
     return order - CSTR_EQUAL;
 }
@@ -99,7 +98,6 @@ static int save(const Image *canvas, const wchar_t *path, wchar_t *err, size_t e
     return status == IMAGE_OK ? 0 : -1;
 }
 
-/* Draws the already sorted and checked paths and saves the atlas. */
 static int compose(const wchar_t *const *paths, const AtlasRequest *req, wchar_t *err, size_t err_len)
 {
     Layout layout;
@@ -113,7 +111,7 @@ static int compose(const wchar_t *const *paths, const AtlasRequest *req, wchar_t
     }
     canvas.width = layout.width;
     canvas.height = layout.height;
-    canvas.rgba = calloc((size_t)layout.width * (size_t)layout.height, 4); /* zero: empty cells stay transparent */
+    canvas.rgba = calloc((size_t)layout.width * (size_t)layout.height, 4);
     if (canvas.rgba == NULL) {
         swprintf(err, err_len, L"Not enough memory for a %d x %d px atlas.", layout.width, layout.height);
         return -1;
@@ -132,7 +130,6 @@ int atlas_build(const AtlasRequest *req, wchar_t *err, size_t err_len)
     int src_h = 0;
     int result = -1;
 
-    /* Let atlas_inspect explain an empty request before anything is allocated for it. */
     if (req->count < 1) return atlas_inspect(req->paths, req->count, &src_w, &src_h, err, err_len);
     sorted = malloc((size_t)req->count * sizeof *sorted);
     if (sorted == NULL) {

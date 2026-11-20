@@ -7,7 +7,7 @@ App app;
 
 #define CLASS_NAME L"AtlasMakerWindow"
 #define WINDOW_STYLE (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX)
-#define CLIENT_W 520 /* client size at 96 DPI; everything is scaled to the system DPI */
+#define CLIENT_W 520
 #define CLIENT_H 440
 
 #define BUTTON (WS_TABSTOP | BS_PUSHBUTTON)
@@ -19,8 +19,8 @@ typedef struct {
     DWORD style;
     DWORD ex_style;
     int id;
-    int x, y, w, h; /* at 96 DPI */
-    HWND *handle;   /* where to keep the control's handle, if it is needed later */
+    int x, y, w, h;
+    HWND *handle;
 } Control;
 
 static const Control controls[] = {
@@ -65,7 +65,7 @@ static int create_controls(HWND hwnd)
         SendMessageW(control, WM_SETFONT, (WPARAM)app.font, FALSE);
         if (c->handle != NULL) *c->handle = control;
     }
-    SendMessageW(app.width, EM_SETLIMITTEXT, 5, 0); /* LAYOUT_MAX_DIM has 5 digits */
+    SendMessageW(app.width, EM_SETLIMITTEXT, 5, 0);
     return 0;
 }
 
@@ -120,7 +120,7 @@ static int start(HINSTANCE instance, int show)
     wc.lpfnWndProc = window_proc;
     wc.hInstance = instance;
     wc.hCursor = LoadCursorW(NULL, IDC_ARROW);
-    wc.hIcon = LoadIconW(instance, MAKEINTRESOURCEW(IDI_APP)); /* Windows derives the small icon from it */
+    wc.hIcon = LoadIconW(instance, MAKEINTRESOURCEW(IDI_APP));
     wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
     wc.lpszClassName = CLASS_NAME;
     if (app.font == NULL || !RegisterClassExW(&wc)) return -1;
@@ -145,7 +145,6 @@ int window_run(HINSTANCE instance, int show)
         if (app.font != NULL) DeleteObject(app.font);
         return 1;
     }
-    /* Runs until the window is closed. IsDialogMessage gives Tab navigation between the controls. */
     while ((got = GetMessageW(&msg, NULL, 0, 0)) > 0) {
         if (!IsDialogMessageW(app.hwnd, &msg)) {
             TranslateMessage(&msg);

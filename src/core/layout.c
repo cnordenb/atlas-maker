@@ -12,10 +12,8 @@ static long long shorter_side(const Layout *l)
     return l->width < l->height ? l->width : l->height;
 }
 
-/* Nonzero if a is closer to square than b, or ties and wastes fewer cells, or ties again and is wider. */
 static int better(const Layout *a, const Layout *b)
 {
-    /* Compare longer/shorter ratios by cross-multiplying, so equal ratios compare exactly equal. */
     long long ratio_a = longer_side(a) * shorter_side(b);
     long long ratio_b = longer_side(b) * shorter_side(a);
     long long cells_a = (long long)a->cols * a->rows;
@@ -31,7 +29,6 @@ int layout_compute(int count, int tile_w, int tile_h, Layout *out)
     Layout best = {0, 0, 0, 0, 0, 0};
 
     if (count < 1 || tile_w < 1 || tile_h < 1 || out == NULL) return -1;
-    /* Widening the grid only grows the width, so stop at the first column count that is too wide. */
     for (int cols = 1; cols <= count && (long long)cols * tile_w <= LAYOUT_MAX_DIM; cols++) {
         int rows = (count + cols - 1) / cols;
         Layout candidate = {cols, rows, tile_w, tile_h, cols * tile_w, 0};

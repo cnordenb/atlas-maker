@@ -9,7 +9,7 @@
 #include "atlas.h"
 #include "layout.h"
 
-#define OPEN_BUFFER_LEN 65536 /* room for a few thousand file names from one Add */
+#define OPEN_BUFFER_LEN 65536
 #define PATH_LEN 1024
 #define TEXT_LEN 1024
 
@@ -26,7 +26,6 @@ static int contains(const wchar_t *path)
     return 0;
 }
 
-/* Takes ownership of path, which may be NULL after a failed allocation. Returns 0, or -1 if memory ran out. */
 static int add_path(wchar_t *path)
 {
     const wchar_t **grown;
@@ -50,7 +49,7 @@ static wchar_t *join_path(const wchar_t *dir, const wchar_t *name)
 {
     size_t dir_len = wcslen(dir);
     size_t name_len = wcslen(name);
-    size_t slash = dir_len > 0 && dir[dir_len - 1] != L'\\'; /* a drive root like C:\ already ends in one */
+    size_t slash = dir_len > 0 && dir[dir_len - 1] != L'\\';
     wchar_t *path = malloc((dir_len + slash + name_len + 1) * sizeof *path);
 
     if (path == NULL) return NULL;
@@ -60,7 +59,6 @@ static wchar_t *join_path(const wchar_t *dir, const wchar_t *name)
     return path;
 }
 
-/* The open dialog returns either one full path, or a folder followed by file names, each NUL-terminated. */
 static int add_selection(const wchar_t *buffer)
 {
     const wchar_t *name = buffer + wcslen(buffer) + 1;
@@ -80,7 +78,6 @@ void inputs_free(void)
     app.count = 0;
 }
 
-/* The tile size: the inputs' own size, or the requested width with the height that keeps their aspect ratio. */
 static int tile_size(int *tile_w, int *tile_h)
 {
     BOOL ok = TRUE;
@@ -203,7 +200,6 @@ void on_browse(void)
     if (GetWindowTextLengthW(app.output) > 0) {
         GetWindowTextW(app.output, path, PATH_LEN);
     } else if (app.count > 0) {
-        /* Start next to the input images. */
         size_t len = (size_t)(atlas_file_name(app.paths[0]) - app.paths[0]);
 
         if (len < PATH_LEN) wmemcpy(dir, app.paths[0], len);

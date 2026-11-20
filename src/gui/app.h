@@ -16,22 +16,19 @@ enum {
     ID_CREATE
 };
 
-/* The state behind the one main window. */
 typedef struct {
     HWND hwnd;
     HWND list, info, resize, width, height, output, summary, status, create;
     HFONT font;
-    const wchar_t **paths; /* input files, owned, kept in atlas order */
+    const wchar_t **paths;
     int count;
-    int src_w, src_h;      /* the inputs' shared resolution, or 0 while they can't be used */
+    int src_w, src_h;
 } App;
 
 extern App app;
 
-/* window.c */
 int window_run(HINSTANCE instance, int show);
 
-/* actions.c: one function per user action, plus the refreshes they trigger. */
 void inputs_changed(void);
 void settings_changed(void);
 void inputs_free(void);

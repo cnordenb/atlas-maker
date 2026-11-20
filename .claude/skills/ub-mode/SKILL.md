@@ -144,9 +144,3 @@ Every time you are asked to make a change follow:
 
 * Find what is safe to remove, confirm nothing still in use needs it, then reclaim the disk.
 * Uncommitted work waits for a decision.
-
-## Commit and Push
-
-* Commit often, in small ordered commits.
-* Each commit says why, what changed, and how you proved it.
-* Push to the main line at the end.
