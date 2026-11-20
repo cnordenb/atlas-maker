@@ -6,11 +6,12 @@
 
 # Atlas Maker
 
+A Windows app that packs PNG images of one resolution into a single atlas, saved as lossy WebP at quality 90.
+
 ![screenshot of Atlas Maker](image.png)
 
-## Description
-
-A Windows app that packs PNG images of one resolution into a single atlas, saved as lossy WebP at quality 90.
+## But why?
+Smaller website is faster for your users and easier on the planet.
 
 ## Usage
 
