@@ -1,3 +1,9 @@
+[![GitHub last commit](https://img.shields.io/github/last-commit/cnordenb/atlas-maker)](#)
+[![language](https://img.shields.io/badge/language-C-555555)](#)
+[![license](https://img.shields.io/badge/license-MIT-007FFF)](LICENSE)
+[![testing](https://img.shields.io/badge/testing-yes-C3FF00)](documentation/TESTS.md)
+[![maintainable](https://img.shields.io/badge/maintainable-yes-00FF72)](documentation/MAINTAINER.md)
+
 # Atlas Maker
 
 ![screenshot of Atlas Maker](image.png)
